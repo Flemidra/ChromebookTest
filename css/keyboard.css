@@ -1,7 +1,7 @@
 #keyboard{width:100%;box-sizing:border-box;padding:6px;display:flex;flex-direction:column;gap:8px;overflow:visible}
 .k-row{display:grid;gap:6px;align-items:center;width:100%}
 
-/* filas con anchos relativos (ajustables) */
+/* filas con anchos relativos */
 .k-row:nth-child(1){grid-template-columns: 0.9fr 0.9fr 0.9fr repeat(13, 1fr) 1.6fr}
 .k-row:nth-child(2){grid-template-columns: 1.2fr repeat(13, 1fr) 1fr}
 .k-row:nth-child(3){grid-template-columns: 1.4fr repeat(11, 1fr) 1.6fr}
@@ -15,7 +15,7 @@
 .key.active{background:rgba(79,70,229,0.95);color:#000;transform:translateY(1px)}
 .key.pressed{background:#10b981;color:#000;box-shadow:none}
 
-/* ajustes responsivos */
+/* responsive */
 @media(max-width:900px){
   .k-row:nth-child(1){grid-template-columns: 0.8fr 0.8fr 0.8fr repeat(13, 1fr) 1.4fr}
   .key{min-height:36px;font-size:12px}
