@@ -1,39 +1,125 @@
-/* css/keyboard.css */
-#keyboard{width:100%;box-sizing:border-box;padding:6px;display:flex;flex-direction:column;gap:8px;overflow:visible}
-.k-row{display:grid;gap:6px;align-items:center;width:100%}
+/* css/keyboard.css - Versión estable que funcionaba */
 
-/* filas con anchos relativos (ajustables) */
-.k-row:nth-child(1){grid-template-columns: 0.82fr 0.82fr 0.65fr repeat(13, 1fr) 1.3fr}
-.k-row:nth-child(2){grid-template-columns: 1.0fr repeat(13, 1fr) 0.9fr}
-.k-row:nth-child(3){grid-template-columns: 1.15fr repeat(11, 1fr) 1.25fr}
-.k-row:nth-child(4){grid-template-columns: 1.3fr repeat(10, 1fr) 1.3fr}
-.k-row:nth-child(5){grid-template-columns: 0.85fr 0.85fr 0.85fr 4.8fr 0.85fr 0.85fr 0.85fr 0.85fr 0.85fr}
+/* Contenedor del teclado */
+#keyboard{
+  width:100%;
+  box-sizing:border-box;
+  padding:6px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  overflow:visible;
+}
 
-/* tecla base: tamaño reducido para mejor encaje */
+/* Cada fila del teclado */
+.k-row{
+  display:grid;
+  gap:6px;
+  align-items:center;
+  width:100%;
+  overflow:visible;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(40px, 1fr);
+}
+
+/* Plantillas explícitas por fila */
+.k-row:nth-child(1){ grid-template-columns: repeat(16, 1fr); grid-auto-columns: unset; }
+.k-row:nth-child(2){ grid-template-columns: repeat(15, 1fr); grid-auto-columns: unset; }
+.k-row:nth-child(3){ grid-template-columns: repeat(13, 1fr); grid-auto-columns: unset; }
+.k-row:nth-child(4){ grid-template-columns: repeat(12, 1fr); grid-auto-columns: unset; }
+.k-row:nth-child(5){ grid-template-columns: repeat(12, 1fr); grid-auto-columns: unset; }
+
+/* Estilos base de tecla */
 .key{
-  background:rgba(255,255,255,0.06);
-  padding:5px 4px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  box-sizing:border-box;
+  min-height:34px;
+  padding:5px 6px;
   border-radius:6px;
   text-align:center;
   font-size:clamp(9px,0.9vw,12px);
   user-select:none;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:34px;
-  transition:background .08s,transform .06s;
+  position:relative;
+  overflow:visible;
+  line-height:1;
+  color:var(--text, #e6eef8);
+  background:rgba(255,255,255,0.06);
+  transition:background .08s, transform .06s;
   box-shadow:0 1px 0 rgba(0,0,0,0.25) inset;
 }
 
-/* estados */
-.key.active{background:rgba(79,70,229,0.95);color:#000;transform:translateY(1px)}
-.key.pressed{background:#10b981;color:#000;box-shadow:none}
-
-/* ajustar espacio inferior de la tarjeta del teclado para que no quede pegada al borde */
-.keyboard-card{padding-bottom:18px}
-
-/* responsive */
-@media(max-width:900px){
-  .k-row:nth-child(1){grid-template-columns: 0.78fr 0.78fr 0.62fr repeat(13, 1fr) 1.2fr}
-  .key{min-height:30px;font-size:10px}
+/* Label interno */
+.key-label{
+  display:inline-block;
+  width:100%;
+  height:100%;
+  line-height:1;
+  z-index:3;
+  pointer-events:none;
+  text-align:center;
+  box-sizing:border-box;
+  padding:0;
+  margin:0;
 }
+
+/* Overlay */
+.key::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:6px;
+  z-index:2;
+  opacity:0;
+  transition:opacity .06s, background .08s;
+}
+
+.key.active::after{ background: rgba(79,70,229,0.95); opacity:1; }
+.key.pressed::after{ background: #10b981; opacity:1; }
+.key.active, .key.pressed { color:#000 !important; }
+
+/* Ajustes por tecla fila inferior */
+.k-row:nth-child(5) .key[data-key-label="CtrlLeft"],
+.k-row:nth-child(5) .key[data-key-label="AltLeft"],
+.k-row:nth-child(5) .key[data-key-label="AltRight"] {
+  grid-column: auto;
+  max-width: none;
+}
+
+/* Space: ocupa columnas 3..8 dentro de 12 columnas */
+.k-row:nth-child(5) .key[data-key-label="Space"]{
+  grid-column: 3 / 8;
+  justify-self:stretch;
+  align-self:center;
+  padding-left:8px;
+  padding-right:8px;
+  min-height:34px;
+  max-width:none;
+}
+
+/* Flechas en la misma fila */
+.k-row:nth-child(5) .key[data-key-label="ArrowLeft"]  { grid-column: 10 / 11; }
+.k-row:nth-child(5) .key[data-key-label="ArrowUp"]    { grid-column: 11 / 12; }
+.k-row:nth-child(5) .key[data-key-label="ArrowDown"]  { grid-column: 11 / 12; }
+.k-row:nth-child(5) .key[data-key-label="ArrowRight"] { grid-column: 12 / 13; }
+
+/* Shift más ancho fila 4 */
+.k-row:nth-child(4) .key[data-key-label="ShiftLeft"],
+.k-row:nth-child(4) .key[data-key-label="ShiftRight"] { grid-column: span 2; }
+
+/* Search fila 3 */
+.k-row:nth-child(3) .key[data-key-label="Search"] { grid-column: span 1; }
+
+/* Separación inferior */
+.keyboard-card{ padding-bottom:20px; }
+
+/* Responsive */
+@media(max-width:900px){
+  .key{ min-height:30px; font-size:11px; padding:4px 5px; }
+  .k-row:nth-child(5) .key[data-key-label="Space"] { grid-column: 3 / 7; max-width:60%; }
+}
+
+/* Evitar recortes del overlay */
+.k-row, #keyboard { overflow: visible; }
