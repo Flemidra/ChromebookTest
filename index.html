@@ -25,10 +25,6 @@
       <section class="card audio-card">
         <h2 class="card-title">Video Test</h2>
         <video id="audio-video" preload="auto" controls playsinline></video>
-        <div class="controls">
-          <button id="audio-play">Play</button>
-          <button id="audio-stop">Stop</button>
-        </div>
       </section>
 
       <section class="card mic-card">
@@ -39,17 +35,12 @@
       <section class="card battery-card">
         <h2 class="card-title">Battery Test</h2>
         <div id="battery-info" class="battery-info">
-          <div class="battery-row">
+          <div class="battery-center">
             <div class="battery-icon" id="battery-icon" aria-hidden="true"></div>
-            <div>
-              <div>State: <span id="battery-status">—</span></div>
-              <div>Level: <span id="battery-level">—</span></div>
-              <div>Estimated time: <span id="battery-time">—</span></div>
-            </div>
+            <div class="battery-percent" id="battery-level">—</div>
+            <div class="battery-time" id="battery-time">—</div>
+            <div class="battery-status" id="battery-status">—</div>
           </div>
-        </div>
-        <div class="battery-controls" style="margin-top:8px;">
-          <button id="battery-refresh">Refresh</button>
         </div>
       </section>
 
@@ -85,10 +76,8 @@
         if (audioVideo.safeSetSrc) audioVideo.safeSetSrc('assets/media/test.mp4');
         else audioVideo.src = 'assets/media/test.mp4';
       }
-      document.getElementById('audio-play').onclick = () => { if (window.safePlayVideo) window.safePlayVideo(); else audioVideo.play().catch(()=>{}); };
-      document.getElementById('audio-stop').onclick = () => { if (audioVideo) { audioVideo.pause(); audioVideo.currentTime = 0; } };
 
-      document.getElementById('battery-refresh').onclick = () => { if (window.initBattery) window.initBattery(); };
+      document.getElementById('battery-refresh')?.remove?.(); // safe no-op if exists
       document.getElementById('theme-toggle').onclick = () => { if (window.toggleTheme) window.toggleTheme(); };
 
       const forceBtn = document.getElementById('force-permissions');

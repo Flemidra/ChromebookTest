@@ -24,9 +24,6 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Arial
   font-size:16px;
 }
 
-/* Controls */
-.controls button{background:var(--accent);border:none;padding:8px 12px;border-radius:8px;color:white;cursor:pointer}
-
 /* Video / Camera / Mic sizing: same visual footprint */
 .audio-card video, .cam-card video, .mic-card canvas {
   width:100%;
@@ -39,10 +36,13 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Arial
 /* Mic canvas specific */
 #mic-canvas{height:180px;background:#071029;border-radius:8px}
 
-/* Battery layout */
-.battery-info{display:flex;flex-direction:column;gap:8px}
-.battery-row{display:flex;gap:12px;align-items:center}
-.battery-icon{width:48px;height:28px;display:flex;align-items:center;justify-content:center}
+/* Battery center layout */
+.battery-info{display:flex;align-items:center;justify-content:center;height:180px}
+.battery-center{display:flex;flex-direction:column;align-items:center;gap:8px}
+.battery-icon{width:64px;height:36px;display:flex;align-items:center;justify-content:center}
+.battery-percent{font-size:20px;font-weight:600}
+.battery-time{font-size:13px;color:var(--muted)}
+.battery-status{font-size:13px;color:var(--muted)}
 
 /* Keyboard card full width */
 .keyboard-card{min-height:220px}

@@ -1,8 +1,8 @@
+// js/audio.js (minimal)
 document.addEventListener("DOMContentLoaded", () => {
-  const video = document.getElementById("audio-video");
-  if (video) video.src = "assets/media/test.mp4";
-  const play = document.getElementById("audio-play");
-  const stop = document.getElementById("audio-stop");
-  if (play) play.onclick = async () => { try { await video.play(); } catch(e){ console.warn(e); } };
-  if (stop) stop.onclick = () => { if (video) { video.pause(); video.currentTime = 0; } };
+  const audioVideo = document.getElementById('audio-video');
+  if (!audioVideo) return;
+  if (audioVideo.safeSetSrc) audioVideo.safeSetSrc('assets/media/test.mp4');
+  else audioVideo.src = 'assets/media/test.mp4';
+  // no extra play/stop handlers — use native controls
 });
