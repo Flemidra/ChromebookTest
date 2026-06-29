@@ -1,7 +1,53 @@
-#keyboard{display:flex;flex-direction:column;gap:8px;width:100%;max-width:1100px;margin:auto;padding:10px}
-.k-row{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:6px;width:100%}
-.key{background:rgba(255,255,255,0.08);padding:10px 6px;border-radius:6px;text-align:center;font-size:clamp(10px,1.4vw,16px);user-select:none;display:flex;align-items:center;justify-content:center;min-height:38px}
-.light .key{background:#ddd}
-.key.active{background:#10b981;color:black}
-.key.Space{grid-column:span 5}.key.Backspace{grid-column:span 2}.key.Enter{grid-column:span 2}.key.Caps{grid-column:span 2}.key.Search{grid-column:span 2}
-@media(max-width:600px){.key{padding:8px 4px;min-height:32px}}
+/* contenedor principal: quepa en la tarjeta sin scroll vertical */
+#keyboard {
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  width:100%;
+  box-sizing:border-box;
+  padding:8px;
+  overflow:visible; /* evitar scroll interno */
+}
+
+/* filas: usar grid con columnas fijas relativas para simular teclado real */
+.k-row {
+  display:grid;
+  grid-auto-flow:column;
+  grid-auto-columns: minmax(28px, 1fr);
+  gap:6px;
+  width:100%;
+  align-items:center;
+}
+
+/* teclas */
+.key {
+  background:rgba(255,255,255,0.06);
+  padding:8px 6px;
+  border-radius:6px;
+  text-align:center;
+  font-size:clamp(11px,1.2vw,14px);
+  user-select:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:40px;
+  transition: background .08s, transform .06s;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.25) inset;
+}
+
+/* tamaño especial para teclas largas */
+.key.Space { grid-column: span 6; }
+.key.Backspace { grid-column: span 2; }
+.key.Enter { grid-column: span 2; }
+.key.Caps { grid-column: span 2; }
+.key.Search { grid-column: span 2; }
+
+/* estado activo (mientras se mantiene presionada) */
+.key.active {
+  background: var(--accent);
+  color: #000;
+  transform: translateY(1px);
+}
+
+/* asegurar que la tarjeta no recorte el teclado en pantallas pequeñas */
+.keyboard-card { overflow: visible; }
