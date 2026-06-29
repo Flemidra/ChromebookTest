@@ -1,18 +1,18 @@
-// js/keyboard.js
+// js/keyboard.js - persistent pressed state, Chromebook layout, robust mapping
 document.addEventListener("DOMContentLoaded", () => {
   const kb = document.getElementById("keyboard");
   if (!kb) { console.error("Keyboard container not found (#keyboard)"); return; }
 
-  // Layout inspirado en Chromebook (filas). Etiquetas visibles.
+  // Layout con anchos relativos por tecla (ver CSS para grid sizing)
   const layout = [
     ["Esc","Search","`","1","2","3","4","5","6","7","8","9","0","-","=","Backspace"],
     ["Tab","Q","W","E","R","T","Y","U","I","O","P","[","]","\\"],
     ["Caps","A","S","D","F","G","H","J","K","L",";","'","Enter"],
-    ["Shift","Z","X","C","V","B","N","M",",",".","/","Shift"],
-    ["Ctrl","AltLeft","Search","Space","AltRight","←","↑","↓","→"]
+    ["ShiftLeft","Z","X","C","V","B","N","M",",",".","/","ShiftRight"],
+    ["CtrlLeft","AltLeft","Search","Space","AltRight","ArrowLeft","ArrowUp","ArrowDown","ArrowRight"]
   ];
 
-  // Crear DOM del teclado
+  // Crear DOM
   layout.forEach(row => {
     const r = document.createElement("div");
     r.className = "k-row";
@@ -20,74 +20,76 @@ document.addEventListener("DOMContentLoaded", () => {
       const k = document.createElement("div");
       k.className = "key";
       k.dataset.keyLabel = key;
-      k.textContent = key;
+      // Mostrar etiqueta legible (mapa simple)
+      const labelMap = {
+        "Space":"Space","ShiftLeft":"Shift","ShiftRight":"Shift","CtrlLeft":"Ctrl","AltLeft":"Alt",
+        "AltRight":"Alt","Search":"Search","ArrowLeft":"←","ArrowRight":"→","ArrowUp":"↑","ArrowDown":"↓",
+        "Backspace":"Backspace","Enter":"Enter","Caps":"Caps","Tab":"Tab","Esc":"Esc"
+      };
+      k.textContent = labelMap[key] || (key.length === 1 ? key : key);
       // clases para anchos
       if (key === "Space") k.classList.add("Space");
       if (key === "Backspace") k.classList.add("Backspace");
       if (key === "Enter") k.classList.add("Enter");
       if (key === "Caps") k.classList.add("Caps");
-      if (key === "Shift") k.classList.add("Shift");
+      if (key === "ShiftLeft" || key === "ShiftRight") k.classList.add("Shift");
       if (key === "Search") k.classList.add("Search");
       r.appendChild(k);
     });
     kb.appendChild(r);
   });
 
-  // Mapa para normalizar event.key / event.code a etiquetas del layout
-  const normalizeMap = {
-    "Escape":"Esc","Backspace":"Backspace","Enter":"Enter","Tab":"Tab",
-    " ":"Space","Spacebar":"Space","Control":"Ctrl","Alt":"AltLeft",
-    "Meta":"Search","OS":"Search","ContextMenu":"Menu","CapsLock":"Caps",
-    "ArrowLeft":"←","ArrowRight":"→","ArrowUp":"↑","ArrowDown":"↓",
-    "Shift":"Shift"
-  };
-
-  // Buscar elemento de tecla por event.key o event.code (soporta AltRight)
-  function findKeyElement(e) {
-    const byCode = (code) => {
-      if (code === "AltRight") return document.querySelector('.key[data-key-label="AltRight"]');
-      if (code === "ArrowUp") return document.querySelector('.key[data-key-label="↑"]');
-      if (code === "ArrowDown") return document.querySelector('.key[data-key-label="↓"]');
-      if (code === "ArrowLeft") return document.querySelector('.key[data-key-label="←"]');
-      if (code === "ArrowRight") return document.querySelector('.key[data-key-label="→"]');
-      return null;
+  // Normalización: event.code preferido para teclas modificadoras y flechas
+  function findKeyElementByEvent(e) {
+    // Priorizar code para AltRight, ShiftRight, CtrlLeft, etc.
+    const code = e.code || "";
+    const key = e.key || "";
+    // map code -> dataset keyLabel
+    const codeMap = {
+      "Space":"Space","ShiftLeft":"ShiftLeft","ShiftRight":"ShiftRight",
+      "AltLeft":"AltLeft","AltRight":"AltRight","ControlLeft":"CtrlLeft","ControlRight":"CtrlRight",
+      "ArrowLeft":"ArrowLeft","ArrowRight":"ArrowRight","ArrowUp":"ArrowUp","ArrowDown":"ArrowDown",
+      "Backspace":"Backspace","Enter":"Enter","Tab":"Tab","Escape":"Esc"
     };
-    const codeMatch = byCode(e.code);
-    if (codeMatch) return codeMatch;
-
-    const label = normalizeMap[e.key] || (e.key.length === 1 ? e.key.toUpperCase() : e.key);
-    return document.querySelector(`.key[data-key-label="${label}"]`);
+    if (codeMap[code]) {
+      // buscar por dataset exacto (ej: AltRight)
+      const el = document.querySelector(`.key[data-key-label="${codeMap[code]}"]`);
+      if (el) return el;
+    }
+    // fallback por key (caracteres y etiquetas)
+    const label = (key.length === 1) ? key.toUpperCase() : (key === " " ? "Space" : key);
+    // map arrow symbols
+    const keyMap = {"ArrowLeft":"←","ArrowRight":"→","ArrowUp":"↑","ArrowDown":"↓"};
+    const mapped = keyMap[key] || label;
+    // buscar por texto o dataset
+    return [...document.querySelectorAll(".key")].find(k => k.dataset.keyLabel === mapped || k.textContent === mapped);
   }
 
-  // Set para teclas físicamente presionadas (evitar repetidos)
   const pressedPhysical = new Set();
 
-  // Cuando se presiona físicamente: añadir clase active (temporal)
   window.addEventListener("keydown", (e) => {
-    const el = findKeyElement(e);
+    const el = findKeyElementByEvent(e);
     if (!el) return;
     if (pressedPhysical.has(e.code)) return; // evitar repeats
     pressedPhysical.add(e.code);
-    el.classList.add("active");
+    el.classList.add("active"); // visual temporal mientras se mantiene
   });
 
-  // Al soltar: quitar active y añadir pressed (persistente)
   window.addEventListener("keyup", (e) => {
-    const el = findKeyElement(e);
+    const el = findKeyElementByEvent(e);
     if (!el) return;
     pressedPhysical.delete(e.code);
     el.classList.remove("active");
-    // si ya estaba pressed, no cambiar; si no, marcar como pressed
+    // persistir: marcar como pressed permanentemente
     if (!el.classList.contains("pressed")) el.classList.add("pressed");
   });
 
-  // Si la ventana pierde foco, limpiar active (pero no pressed)
   window.addEventListener("blur", () => {
     pressedPhysical.clear();
     document.querySelectorAll(".key.active").forEach(k => k.classList.remove("active"));
   });
 
-  // Interacción táctil: pointerdown activa, pointerup marca como pressed (toggle)
+  // pointer interactions: marcar permanentemente al soltar
   kb.addEventListener("pointerdown", (ev) => {
     const keyEl = ev.target.closest(".key");
     if (!keyEl) return;
@@ -97,23 +99,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const keyEl = ev.target.closest(".key");
     if (!keyEl) return;
     keyEl.classList.remove("active");
-    // alternar pressed: si ya estaba pressed, dejarlo (o permitir desmarcar si quieres)
     if (!keyEl.classList.contains("pressed")) keyEl.classList.add("pressed");
   });
 
-  // Funciones utilitarias expuestas en window para pruebas y control
+  // utilidades
   window.keyboardUtils = {
-    resetPressed: () => {
-      document.querySelectorAll(".key.pressed").forEach(k => k.classList.remove("pressed"));
-    },
-    getPressedKeys: () => {
-      return [...document.querySelectorAll(".key.pressed")].map(k => k.dataset.keyLabel);
-    },
-    markKeyPressed: (label) => {
-      const el = document.querySelector(`.key[data-key-label="${label}"]`);
-      if (el) el.classList.add("pressed");
-    }
+    resetPressed: () => document.querySelectorAll(".key.pressed").forEach(k => k.classList.remove("pressed")),
+    getPressedKeys: () => [...document.querySelectorAll(".key.pressed")].map(k => k.dataset.keyLabel)
   };
 
-  console.log("Keyboard initialized. Use keyboardUtils.getPressedKeys() or resetPressed().");
+  console.log("Keyboard ready. Use keyboardUtils.getPressedKeys() / resetPressed().");
 });

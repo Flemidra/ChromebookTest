@@ -1,66 +1,51 @@
-/* keyboard container: quepa en la tarjeta sin scroll vertical */
+/* css/keyboard.css - layout inspirado en retest.us */
 #keyboard {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px;
   display:flex;
   flex-direction:column;
   gap:8px;
-  width:100%;
-  box-sizing:border-box;
-  padding:8px;
   overflow:visible;
 }
 
-/* filas: grid con columnas flexibles para simular teclado real */
+/* cada fila tendrá columnas con fracciones específicas */
 .k-row {
   display:grid;
-  grid-auto-flow:column;
-  grid-auto-columns: minmax(28px, 1fr);
   gap:6px;
-  width:100%;
   align-items:center;
+  width:100%;
 }
+
+/* filas con template por fila (ajustar si quieres exactitud pixel) */
+.k-row:nth-child(1) { grid-template-columns: 1fr 1fr 0.9fr repeat(13, 1fr) 1.6fr; } /* Esc Search ` 1..0 .. Backspace */
+.k-row:nth-child(2) { grid-template-columns: 1.2fr repeat(13, 1fr) 1fr; } /* Tab Q..P [ ] \ */
+.k-row:nth-child(3) { grid-template-columns: 1.4fr repeat(11, 1fr) 1.6fr; } /* Caps A..L ; ' Enter */
+.k-row:nth-child(4) { grid-template-columns: 1.6fr repeat(10, 1fr) 1.6fr; } /* Shift Z.. / Shift */
+.k-row:nth-child(5) { grid-template-columns: 1fr 1fr 1fr 6fr 1fr 1fr 1fr 1fr 1fr; } /* Ctrl Alt Search Space AltRight arrows */
 
 /* tecla base */
 .key {
-  background:rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.06);
   padding:8px 6px;
   border-radius:6px;
   text-align:center;
-  font-size:clamp(11px,1.2vw,14px);
+  font-size:clamp(11px,1.1vw,14px);
   user-select:none;
   display:flex;
   align-items:center;
   justify-content:center;
-  min-height:40px;
+  min-height:44px;
   transition: background .08s, transform .06s;
   box-shadow: 0 1px 0 rgba(0,0,0,0.25) inset;
-  cursor:default;
 }
 
-/* teclas especiales (anchos) */
-.key.Space { grid-column: span 6; }
-.key.Backspace { grid-column: span 2; }
-.key.Enter { grid-column: span 2; }
-.key.Caps { grid-column: span 2; }
-.key.Shift { grid-column: span 2; }
-.key.Tab { grid-column: span 1.5; }
-.key.Search { grid-column: span 2; }
+/* estados */
+.key.active { background: rgba(79,70,229,0.95); color:#000; transform: translateY(1px); }
+.key.pressed { background: #10b981; color:#000; box-shadow:none; }
 
-/* estado mientras se mantiene presionada físicamente (keydown) */
-.key.active {
-  background: rgba(79,70,229,0.95);
-  color: #000;
-  transform: translateY(1px);
+/* ajustes responsivos para pantallas pequeñas */
+@media(max-width:900px) {
+  .k-row:nth-child(1) { grid-template-columns: 1fr 1fr 0.8fr repeat(13, 1fr) 1.4fr; }
+  .key { min-height:36px; font-size:12px; }
 }
-
-/* estado persistente: tecla ya presionada (se queda así tras keyup) */
-.key.pressed {
-  background: #10b981; /* verde para indicar completado */
-  color: #000;
-  box-shadow: none;
-}
-
-/* estilo para teclas de flechas agrupadas */
-.arrow-group { display:flex; gap:6px; align-items:center; }
-
-/* evitar que la tarjeta recorte el teclado */
-.keyboard-card { overflow: visible; }
