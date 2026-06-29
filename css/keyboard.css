@@ -1,4 +1,4 @@
-/* css/keyboard.css - Versión completa y corregida para la fila inferior */
+/* css/keyboard.css - Versión final: fila inferior con espacio amplio y posiciones fijas */
 
 /* Contenedor del teclado */
 #keyboard{
@@ -27,8 +27,13 @@
 .k-row:nth-child(2){ grid-template-columns: repeat(15, 1fr); grid-auto-columns: unset; }
 .k-row:nth-child(3){ grid-template-columns: repeat(13, 1fr); grid-auto-columns: unset; }
 .k-row:nth-child(4){ grid-template-columns: repeat(12, 1fr); grid-auto-columns: unset; }
-/* Fila inferior: más columnas para evitar saltos y dar margen a la spacebar */
-.k-row:nth-child(5){ grid-template-columns: repeat(14, 1fr); grid-auto-columns: unset; }
+
+/* Fila inferior: plantilla explícita por columna (8 columnas, Space amplia) */
+.k-row:nth-child(5){
+  /* 8 columnas: CtrlLeft | AltLeft | Space(6fr) | AltRight | ArrowLeft | ArrowUp | ArrowDown | ArrowRight */
+  grid-template-columns: 1fr 1fr 6fr 1fr 1fr 1fr 1fr 1fr !important;
+  grid-auto-columns: unset !important;
+}
 
 /* Estilos base de tecla */
 .key{
@@ -69,4 +74,67 @@
 /* Overlay */
 .key::after{
   content:"";
-  position:absolute
+  position:absolute;
+  inset:0;
+  border-radius:6px;
+  z-index:2;
+  opacity:0;
+  transition:opacity .06s, background .08s;
+}
+
+.key.active::after{ background: rgba(79,70,229,0.95); opacity:1; }
+.key.pressed::after{ background: #10b981; opacity:1; }
+.key.active, .key.pressed { color:#000 !important; }
+
+/* Ajustes por tecla fila inferior: permitir tamaño flexible para modificadores */
+.k-row:nth-child(5) .key[data-key-label="CtrlLeft"],
+.k-row:nth-child(5) .key[data-key-label="AltLeft"],
+.k-row:nth-child(5) .key[data-key-label="AltRight"] {
+  max-width: none;
+}
+
+/* Space: ocupa la tercera columna (la columna 3 tiene 6fr) */
+.k-row:nth-child(5) .key[data-key-label="Space"]{
+  grid-column: 3 / 4;
+  justify-self:stretch;
+  align-self:center;
+  padding-left:8px;
+  padding-right:8px;
+  min-height:34px;
+  max-width:none;
+}
+
+/* Posiciones fijas para AltRight y flechas (coinciden con la plantilla de 8 columnas) */
+.k-row:nth-child(5) .key[data-key-label="AltRight"]{ grid-column: 4 / 5; }
+.k-row:nth-child(5) .key[data-key-label="ArrowLeft"]  { grid-column: 5 / 6; }
+.k-row:nth-child(5) .key[data-key-label="ArrowUp"]    { grid-column: 6 / 7; }
+.k-row:nth-child(5) .key[data-key-label="ArrowDown"]  { grid-column: 7 / 8; }
+.k-row:nth-child(5) .key[data-key-label="ArrowRight"] { grid-column: 8 / 9; }
+
+/* Shift más ancho fila 4 */
+.k-row:nth-child(4) .key[data-key-label="ShiftLeft"],
+.k-row:nth-child(4) .key[data-key-label="ShiftRight"] { grid-column: span 2; }
+
+/* Search fila 3 */
+.k-row:nth-child(3) .key[data-key-label="Search"] { grid-column: span 1; }
+
+/* Separación inferior */
+.keyboard-card{ padding-bottom:20px; }
+
+/* Responsive */
+@media(max-width:900px){
+  .key{ min-height:30px; font-size:11px; padding:4px 5px; }
+  /* Reducir span de space en pantallas pequeñas */
+  .k-row:nth-child(5){
+    grid-template-columns: 1fr 1fr 4fr 1fr 1fr 1fr 1fr 1fr !important;
+  }
+  .k-row:nth-child(5) .key[data-key-label="Space"] { grid-column: 3 / 4; max-width:60%; }
+  .k-row:nth-child(5) .key[data-key-label="AltRight"]{ grid-column: 4 / 5; }
+  .k-row:nth-child(5) .key[data-key-label="ArrowLeft"]  { grid-column: 5 / 6; }
+  .k-row:nth-child(5) .key[data-key-label="ArrowUp"]    { grid-column: 6 / 7; }
+  .k-row:nth-child(5) .key[data-key-label="ArrowDown"]  { grid-column: 7 / 8; }
+  .k-row:nth-child(5) .key[data-key-label="ArrowRight"] { grid-column: 8 / 9; }
+}
+
+/* Evitar recortes del overlay */
+.k-row, #keyboard { overflow: visible; }
