@@ -3,17 +3,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const kb = document.getElementById("keyboard");
   if (!kb) { console.error("Keyboard container not found (#keyboard)"); return; }
 
-  // Layout matching Chromebook physical order (retest.us style)
+  // Layout matching Chromebook physical order (Search in Caps position)
   const layout = [
-    // Row 1
     ["Esc","Search","`","1","2","3","4","5","6","7","8","9","0","-","=","Backspace"],
-    // Row 2
     ["Tab","Q","W","E","R","T","Y","U","I","O","P","[","]","\\"],
-    // Row 3
-    ["Caps","A","S","D","F","G","H","J","K","L",";","'","Enter"],
-    // Row 4
+    ["Search","A","S","D","F","G","H","J","K","L",";","'","Enter"],
     ["ShiftLeft","Z","X","C","V","B","N","M",",",".","/","ShiftRight"],
-    // Row 5 (bottom)
     ["CtrlLeft","AltLeft","Search","Space","AltRight","ArrowLeft","ArrowUp","ArrowDown","ArrowRight"]
   ];
 
@@ -28,13 +23,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const labelMap = {
         "Space":"Space","ShiftLeft":"Shift","ShiftRight":"Shift","CtrlLeft":"Ctrl","CtrlRight":"Ctrl",
         "AltLeft":"Alt","AltRight":"Alt","Search":"Search","ArrowLeft":"←","ArrowRight":"→","ArrowUp":"↑","ArrowDown":"↓",
-        "Backspace":"Backspace","Enter":"Enter","Caps":"Caps","Tab":"Tab","Esc":"Esc"
+        "Backspace":"Backspace","Enter":"Enter","Tab":"Tab","Esc":"Esc"
       };
       k.textContent = labelMap[key] || (key.length === 1 ? key : key);
       if (key === "Space") k.classList.add("Space");
       if (key === "Backspace") k.classList.add("Backspace");
       if (key === "Enter") k.classList.add("Enter");
-      if (key === "Caps") k.classList.add("Caps");
       if (key === "ShiftLeft" || key === "ShiftRight") k.classList.add("Shift");
       if (key === "Search") k.classList.add("Search");
       r.appendChild(k);
@@ -42,22 +36,19 @@ document.addEventListener("DOMContentLoaded", () => {
     kb.appendChild(r);
   });
 
-  // Find key element by event (prefer event.code for modifiers/arrows)
   function findKeyElementByEvent(e) {
     const code = e.code || "";
     const key = e.key || "";
-
     const codeMap = {
       "Space":"Space","ShiftLeft":"ShiftLeft","ShiftRight":"ShiftRight",
       "AltLeft":"AltLeft","AltRight":"AltRight","ControlLeft":"CtrlLeft","ControlRight":"CtrlRight",
       "ArrowLeft":"ArrowLeft","ArrowRight":"ArrowRight","ArrowUp":"ArrowUp","ArrowDown":"ArrowDown",
-      "Backspace":"Backspace","Enter":"Enter","Tab":"Tab","Escape":"Esc","Escape":"Esc"
+      "Backspace":"Backspace","Enter":"Enter","Tab":"Tab","Escape":"Esc"
     };
     if (codeMap[code]) {
       const el = document.querySelector(`.key[data-key-label="${codeMap[code]}"]`);
       if (el) return el;
     }
-
     const keyMap = {"ArrowLeft":"←","ArrowRight":"→","ArrowUp":"↑","ArrowDown":"↓"};
     const label = (key === " " ? "Space" : (keyMap[key] || (key.length === 1 ? key.toUpperCase() : key)));
     let el = document.querySelector(`.key[data-key-label="${label}"]`);
@@ -66,19 +57,16 @@ document.addEventListener("DOMContentLoaded", () => {
     return el || null;
   }
 
-  // Track physically pressed codes to avoid repeats
   const pressedPhysical = new Set();
 
-  // keydown: add temporary active state while held
   window.addEventListener("keydown", (e) => {
     const el = findKeyElementByEvent(e);
     if (!el) return;
-    if (pressedPhysical.has(e.code)) return; // ignore auto-repeat
+    if (pressedPhysical.has(e.code)) return;
     pressedPhysical.add(e.code);
     el.classList.add("active");
   }, {passive:true});
 
-  // keyup: remove active and add persistent pressed
   window.addEventListener("keyup", (e) => {
     const el = findKeyElementByEvent(e);
     if (!el) return;
@@ -87,13 +75,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!el.classList.contains("pressed")) el.classList.add("pressed");
   }, {passive:true});
 
-  // blur: clear active states but keep pressed
   window.addEventListener("blur", () => {
     pressedPhysical.clear();
     document.querySelectorAll(".key.active").forEach(k => k.classList.remove("active"));
   });
 
-  // pointer interactions: pointerdown shows active, pointerup marks persistent pressed
   kb.addEventListener("pointerdown", (ev) => {
     const keyEl = ev.target.closest(".key");
     if (!keyEl) return;
@@ -115,7 +101,6 @@ document.addEventListener("DOMContentLoaded", () => {
     keyEl.classList.remove("active");
   });
 
-  // Utilities exposed for debugging/control
   window.keyboardUtils = {
     resetPressed: () => {
       document.querySelectorAll(".key.pressed").forEach(k => k.classList.remove("pressed"));

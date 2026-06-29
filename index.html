@@ -10,6 +10,7 @@
 <body>
   <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌗</button>
 
+  <!-- Overlay (modal) for permissions -->
   <div id="overlay" class="overlay">
     <div class="overlay-card">
       <h2>Permissions Required</h2>
@@ -18,43 +19,47 @@
     </div>
   </div>
 
+  <!-- Grid: top row with 4 tests, keyboard full width below -->
   <div class="grid">
-    <section class="card audio-card">
-      <h2 class="card-title">Video Test</h2>
-      <video id="audio-video" preload="auto" controls playsinline></video>
-      <div class="controls">
-        <button id="audio-play">Play</button>
-        <button id="audio-stop">Stop</button>
-      </div>
-    </section>
+    <div class="top-row">
+      <section class="card audio-card">
+        <h2 class="card-title">Video Test</h2>
+        <video id="audio-video" preload="auto" controls playsinline></video>
+        <div class="controls">
+          <button id="audio-play">Play</button>
+          <button id="audio-stop">Stop</button>
+        </div>
+      </section>
 
-    <section class="card mic-card">
-      <h2 class="card-title">Microphone</h2>
-      <canvas id="mic-canvas" width="600" height="160"></canvas>
-    </section>
+      <section class="card mic-card">
+        <h2 class="card-title">Microphone</h2>
+        <canvas id="mic-canvas" width="600" height="160"></canvas>
+      </section>
 
-    <section class="card battery-card">
-      <h2 class="card-title">Battery Test</h2>
-      <div id="battery-info" class="battery-info">
-        <div class="battery-row">
-          <div class="battery-icon" id="battery-icon" aria-hidden="true"></div>
-          <div>
-            <div>State: <span id="battery-status">—</span></div>
-            <div>Level: <span id="battery-level">—</span></div>
-            <div>Estimated time: <span id="battery-time">—</span></div>
+      <section class="card battery-card">
+        <h2 class="card-title">Battery Test</h2>
+        <div id="battery-info" class="battery-info">
+          <div class="battery-row">
+            <div class="battery-icon" id="battery-icon" aria-hidden="true"></div>
+            <div>
+              <div>State: <span id="battery-status">—</span></div>
+              <div>Level: <span id="battery-level">—</span></div>
+              <div>Estimated time: <span id="battery-time">—</span></div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="battery-controls" style="margin-top:8px;">
-        <button id="battery-refresh">Refresh</button>
-      </div>
-    </section>
+        <div class="battery-controls" style="margin-top:8px;">
+          <button id="battery-refresh">Refresh</button>
+        </div>
+      </section>
 
-    <section class="card cam-card">
-      <h2 class="card-title">Camera</h2>
-      <video id="cam-video" autoplay playsinline muted></video>
-    </section>
+      <section class="card cam-card">
+        <h2 class="card-title">Camera</h2>
+        <video id="cam-video" autoplay playsinline muted></video>
+      </section>
+    </div>
 
+    <!-- Keyboard full width below -->
     <section class="card keyboard-card">
       <h2 class="card-title card-title-left">Keyboard Test</h2>
       <div id="keyboard" class="keyboard-container" aria-hidden="false"></div>
@@ -63,6 +68,7 @@
 
   <div class="watermark">Created by Flemidra</div>
 
+  <!-- JS -->
   <script defer src="js/theme.js"></script>
   <script defer src="js/permissions.js"></script>
   <script defer src="js/safeplay.js"></script>
