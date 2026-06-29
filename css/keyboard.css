@@ -1,0 +1,7 @@
+#keyboard{display:flex;flex-direction:column;gap:8px;width:100%;max-width:1100px;margin:auto;padding:10px}
+.k-row{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:6px;width:100%}
+.key{background:rgba(255,255,255,0.08);padding:10px 6px;border-radius:6px;text-align:center;font-size:clamp(10px,1.4vw,16px);user-select:none;display:flex;align-items:center;justify-content:center;min-height:38px}
+.light .key{background:#ddd}
+.key.active{background:#10b981;color:black}
+.key.Space{grid-column:span 5}.key.Backspace{grid-column:span 2}.key.Enter{grid-column:span 2}.key.Caps{grid-column:span 2}.key.Search{grid-column:span 2}
+@media(max-width:600px){.key{padding:8px 4px;min-height:32px}}
