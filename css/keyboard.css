@@ -1,4 +1,4 @@
-/* contenedor principal: quepa en la tarjeta sin scroll vertical */
+/* keyboard container: quepa en la tarjeta sin scroll vertical */
 #keyboard {
   display:flex;
   flex-direction:column;
@@ -6,10 +6,10 @@
   width:100%;
   box-sizing:border-box;
   padding:8px;
-  overflow:visible; /* evitar scroll interno */
+  overflow:visible;
 }
 
-/* filas: usar grid con columnas fijas relativas para simular teclado real */
+/* filas: grid con columnas flexibles para simular teclado real */
 .k-row {
   display:grid;
   grid-auto-flow:column;
@@ -19,7 +19,7 @@
   align-items:center;
 }
 
-/* teclas */
+/* tecla base */
 .key {
   background:rgba(255,255,255,0.06);
   padding:8px 6px;
@@ -33,21 +33,34 @@
   min-height:40px;
   transition: background .08s, transform .06s;
   box-shadow: 0 1px 0 rgba(0,0,0,0.25) inset;
+  cursor:default;
 }
 
-/* tamaño especial para teclas largas */
+/* teclas especiales (anchos) */
 .key.Space { grid-column: span 6; }
 .key.Backspace { grid-column: span 2; }
 .key.Enter { grid-column: span 2; }
 .key.Caps { grid-column: span 2; }
+.key.Shift { grid-column: span 2; }
+.key.Tab { grid-column: span 1.5; }
 .key.Search { grid-column: span 2; }
 
-/* estado activo (mientras se mantiene presionada) */
+/* estado mientras se mantiene presionada físicamente (keydown) */
 .key.active {
-  background: var(--accent);
+  background: rgba(79,70,229,0.95);
   color: #000;
   transform: translateY(1px);
 }
 
-/* asegurar que la tarjeta no recorte el teclado en pantallas pequeñas */
+/* estado persistente: tecla ya presionada (se queda así tras keyup) */
+.key.pressed {
+  background: #10b981; /* verde para indicar completado */
+  color: #000;
+  box-shadow: none;
+}
+
+/* estilo para teclas de flechas agrupadas */
+.arrow-group { display:flex; gap:6px; align-items:center; }
+
+/* evitar que la tarjeta recorte el teclado */
 .keyboard-card { overflow: visible; }
