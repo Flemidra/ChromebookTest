@@ -1,127 +1,106 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!doctype html>
+<html lang="es">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.6">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 11.0px 'Helvetica Neue'; color: #000000; color: rgba(0, 0, 0, 0.85); -webkit-text-stroke: rgba(0, 0, 0, 0.85); background-color: #a4a4a4}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 11.0px 'Helvetica Neue'; color: #000000; color: rgba(0, 0, 0, 0.85); -webkit-text-stroke: rgba(0, 0, 0, 0.85); background-color: #a4a4a4; min-height: 12.0px}
-    span.s1 {font-kerning: none}
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chromebook Test</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/keyboard.css" />
 </head>
 <body>
-<p class="p1"><span class="s1">&lt;!doctype html&gt;</span></p>
-<p class="p1"><span class="s1">&lt;html lang="es"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;head&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;meta charset="utf-8" /&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width,initial-scale=1" /&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;title&gt;Chromebook Test&lt;/title&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;link rel="stylesheet" href="css/style.css" /&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;link rel="stylesheet" href="css/keyboard.css" /&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;body&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;button id="theme-toggle" class="theme-toggle"&gt;Toggle Theme&lt;/button&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div id="overlay" class="overlay" style="display:flex"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="overlay-card"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;h2&gt;Permissions Required&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;p&gt;This page needs access to the camera and microphone.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;button id="force-permissions"&gt;Allow camera &amp; mic&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div class="grid"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;section class="card audio-card"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;h2&gt;Audio Test&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;video id="audio-video" preload="auto" controls playsinline&gt;&lt;/video&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="controls"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;button id="audio-play"&gt;Play&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;button id="audio-stop"&gt;Stop&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/section&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;section class="card mic-card"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;h2&gt;Microphone&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;canvas id="mic-canvas" width="600" height="160"&gt;&lt;/canvas&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/section&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;section class="card cam-card"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;h2&gt;Camera&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;video id="cam-video" autoplay playsinline muted&gt;&lt;/video&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/section&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;section class="card keyboard-card"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;h2&gt;Keyboard Test&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div id="keyboard"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div style="margin-top:10px;display:flex;gap:8px;"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;button id="keyboard-reset"&gt;Reset pressed&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;button id="keyboard-list"&gt;List pressed&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/section&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;section class="card battery-card"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;h2&gt;Battery Test&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div id="battery-info"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div&gt;Estado: &lt;span id="battery-status"&gt;—&lt;/span&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div&gt;Porcentaje: &lt;span id="battery-level"&gt;—&lt;/span&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div&gt;Tiempo estimado: &lt;span id="battery-time"&gt;—&lt;/span&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="battery-controls" style="margin-top:8px;"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;button id="battery-refresh"&gt;Refresh&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/section&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div class="watermark"&gt;Created by Flemidra&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;!-- JS: cargar safeplay antes de audio.js --&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;script defer src="js/theme.js"&gt;&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;script defer src="js/permissions.js"&gt;&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;script defer src="js/safeplay.js"&gt;&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;script defer src="js/microphone.js"&gt;&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;script defer src="js/camera.js"&gt;&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;script defer src="js/audio.js"&gt;&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;script defer src="js/keyboard.js"&gt;&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;script defer src="js/battery.js"&gt;&lt;/script&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>// botones utilitarios para la UI</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>document.addEventListener('DOMContentLoaded', () =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const playBtn = document.getElementById('audio-play');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const stopBtn = document.getElementById('audio-stop');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const audioVideo = document.getElementById('audio-video');</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>if (audioVideo) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// usar safeSetSrc si está disponible</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if (audioVideo.safeSetSrc) audioVideo.safeSetSrc('assets/media/test.mp4');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>else audioVideo.src = 'assets/media/test.mp4';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>if (playBtn) playBtn.onclick = () =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if (window.safePlayVideo) window.safePlayVideo();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>else audioVideo.play().catch(()=&gt;{});</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>};</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>if (stopBtn) stopBtn.onclick = () =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if (audioVideo) { audioVideo.pause(); audioVideo.currentTime = 0; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>};</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>// keyboard UI helpers</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const resetBtn = document.getElementById('keyboard-reset');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const listBtn = document.getElementById('keyboard-list');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>if (resetBtn) resetBtn.onclick = () =&gt; { if (window.keyboardUtils) window.keyboardUtils.resetPressed(); };</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>if (listBtn) listBtn.onclick = () =&gt; { if (window.keyboardUtils) console.log(window.keyboardUtils.getPressedKeys()); };</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>// battery refresh</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const batteryRefresh = document.getElementById('battery-refresh');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>if (batteryRefresh) batteryRefresh.onclick = () =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if (window.initBattery) window.initBattery();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>});</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+  <button id="theme-toggle" class="theme-toggle">Toggle Theme</button>
+
+  <div id="overlay" class="overlay" style="display:flex">
+    <div class="overlay-card">
+      <h2>Permissions Required</h2>
+      <p>This page needs access to the camera and microphone.</p>
+      <button id="force-permissions">Allow camera & mic</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <section class="card audio-card">
+      <h2>Audio Test</h2>
+      <video id="audio-video" preload="auto" controls playsinline></video>
+      <div class="controls">
+        <button id="audio-play">Play</button>
+        <button id="audio-stop">Stop</button>
+      </div>
+    </section>
+
+    <section class="card mic-card">
+      <h2>Microphone</h2>
+      <canvas id="mic-canvas" width="600" height="160"></canvas>
+    </section>
+
+    <section class="card cam-card">
+      <h2>Camera</h2>
+      <video id="cam-video" autoplay playsinline muted></video>
+    </section>
+
+    <section class="card keyboard-card">
+      <h2>Keyboard Test</h2>
+      <div id="keyboard"></div>
+      <div style="margin-top:10px;display:flex;gap:8px;">
+        <button id="keyboard-reset">Reset pressed</button>
+        <button id="keyboard-list">List pressed</button>
+      </div>
+    </section>
+
+    <section class="card battery-card">
+      <h2>Battery Test</h2>
+      <div id="battery-info">
+        <div>Estado: <span id="battery-status">—</span></div>
+        <div>Porcentaje: <span id="battery-level">—</span></div>
+        <div>Tiempo estimado: <span id="battery-time">—</span></div>
+      </div>
+      <div class="battery-controls" style="margin-top:8px;">
+        <button id="battery-refresh">Refresh</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="watermark">Created by Flemidra</div>
+
+  <!-- JS: cargar safeplay antes de audio.js -->
+  <script defer src="js/theme.js"></script>
+  <script defer src="js/permissions.js"></script>
+  <script defer src="js/safeplay.js"></script>
+  <script defer src="js/microphone.js"></script>
+  <script defer src="js/camera.js"></script>
+  <script defer src="js/audio.js"></script>
+  <script defer src="js/keyboard.js"></script>
+  <script defer src="js/battery.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const playBtn = document.getElementById('audio-play');
+      const stopBtn = document.getElementById('audio-stop');
+      const audioVideo = document.getElementById('audio-video');
+
+      if (audioVideo) {
+        if (audioVideo.safeSetSrc) audioVideo.safeSetSrc('assets/media/test.mp4');
+        else audioVideo.src = 'assets/media/test.mp4';
+      }
+
+      if (playBtn) playBtn.onclick = () => {
+        if (window.safePlayVideo) window.safePlayVideo();
+        else audioVideo.play().catch(()=>{});
+      };
+      if (stopBtn) stopBtn.onclick = () => {
+        if (audioVideo) { audioVideo.pause(); audioVideo.currentTime = 0; }
+      };
+
+      const resetBtn = document.getElementById('keyboard-reset');
+      const listBtn = document.getElementById('keyboard-list');
+      if (resetBtn) resetBtn.onclick = () => { if (window.keyboardUtils) window.keyboardUtils.resetPressed(); };
+      if (listBtn) listBtn.onclick = () => { if (window.keyboardUtils) console.log(window.keyboardUtils.getPressedKeys()); };
+
+      const batteryRefresh = document.getElementById('battery-refresh');
+      if (batteryRefresh) batteryRefresh.onclick = () => {
+        if (window.initBattery) window.initBattery();
+      }
+    });
+  </script>
 </body>
 </html>
