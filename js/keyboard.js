@@ -1,9 +1,9 @@
-// js/keyboard.js - persistent pressed state, Chromebook layout, robust mapping
+// js/keyboard.js - Finalized: persistent pressed state, Chromebook layout, robust mapping
 document.addEventListener("DOMContentLoaded", () => {
   const kb = document.getElementById("keyboard");
   if (!kb) { console.error("Keyboard container not found (#keyboard)"); return; }
 
-  // Layout con anchos relativos por tecla (ver CSS para grid sizing)
+  // Layout using dataset keys (codes or logical names)
   const layout = [
     ["Esc","Search","`","1","2","3","4","5","6","7","8","9","0","-","=","Backspace"],
     ["Tab","Q","W","E","R","T","Y","U","I","O","P","[","]","\\"],
@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ["CtrlLeft","AltLeft","Search","Space","AltRight","ArrowLeft","ArrowUp","ArrowDown","ArrowRight"]
   ];
 
-  // Crear DOM
+  // Create DOM
   layout.forEach(row => {
     const r = document.createElement("div");
     r.className = "k-row";
@@ -20,14 +20,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const k = document.createElement("div");
       k.className = "key";
       k.dataset.keyLabel = key;
-      // Mostrar etiqueta legible (mapa simple)
+      // human readable label
       const labelMap = {
-        "Space":"Space","ShiftLeft":"Shift","ShiftRight":"Shift","CtrlLeft":"Ctrl","AltLeft":"Alt",
-        "AltRight":"Alt","Search":"Search","ArrowLeft":"←","ArrowRight":"→","ArrowUp":"↑","ArrowDown":"↓",
+        "Space":"Space","ShiftLeft":"Shift","ShiftRight":"Shift","CtrlLeft":"Ctrl","CtrlRight":"Ctrl",
+        "AltLeft":"Alt","AltRight":"Alt","Search":"Search","ArrowLeft":"←","ArrowRight":"→","ArrowUp":"↑","ArrowDown":"↓",
         "Backspace":"Backspace","Enter":"Enter","Caps":"Caps","Tab":"Tab","Esc":"Esc"
       };
       k.textContent = labelMap[key] || (key.length === 1 ? key : key);
-      // clases para anchos
+      // add classes for width styling (CSS handles exact widths)
       if (key === "Space") k.classList.add("Space");
       if (key === "Backspace") k.classList.add("Backspace");
       if (key === "Enter") k.classList.add("Enter");
@@ -39,12 +39,12 @@ document.addEventListener("DOMContentLoaded", () => {
     kb.appendChild(r);
   });
 
-  // Normalización: event.code preferido para teclas modificadoras y flechas
+  // Helper: find key element by event (prefer event.code for modifiers/arrows)
   function findKeyElementByEvent(e) {
-    // Priorizar code para AltRight, ShiftRight, CtrlLeft, etc.
     const code = e.code || "";
     const key = e.key || "";
-    // map code -> dataset keyLabel
+
+    // direct code mapping for common special keys
     const codeMap = {
       "Space":"Space","ShiftLeft":"ShiftLeft","ShiftRight":"ShiftRight",
       "AltLeft":"AltLeft","AltRight":"AltRight","ControlLeft":"CtrlLeft","ControlRight":"CtrlRight",
@@ -52,61 +52,91 @@ document.addEventListener("DOMContentLoaded", () => {
       "Backspace":"Backspace","Enter":"Enter","Tab":"Tab","Escape":"Esc"
     };
     if (codeMap[code]) {
-      // buscar por dataset exacto (ej: AltRight)
       const el = document.querySelector(`.key[data-key-label="${codeMap[code]}"]`);
       if (el) return el;
     }
-    // fallback por key (caracteres y etiquetas)
-    const label = (key.length === 1) ? key.toUpperCase() : (key === " " ? "Space" : key);
-    // map arrow symbols
+
+    // fallback: map key to visible label
     const keyMap = {"ArrowLeft":"←","ArrowRight":"→","ArrowUp":"↑","ArrowDown":"↓"};
-    const mapped = keyMap[key] || label;
-    // buscar por texto o dataset
-    return [...document.querySelectorAll(".key")].find(k => k.dataset.keyLabel === mapped || k.textContent === mapped);
+    const label = (key === " " ? "Space" : (keyMap[key] || (key.length === 1 ? key.toUpperCase() : key)));
+    // try dataset match first (some keys use dataset labels like "AltRight")
+    let el = document.querySelector(`.key[data-key-label="${label}"]`);
+    if (el) return el;
+    // then try by visible text content
+    el = [...document.querySelectorAll(".key")].find(k => k.textContent === label);
+    return el || null;
   }
 
+  // Track physically pressed codes to avoid repeats
   const pressedPhysical = new Set();
 
+  // keydown: add temporary active state (while held)
   window.addEventListener("keydown", (e) => {
     const el = findKeyElementByEvent(e);
     if (!el) return;
-    if (pressedPhysical.has(e.code)) return; // evitar repeats
+    if (pressedPhysical.has(e.code)) return; // ignore auto-repeat
     pressedPhysical.add(e.code);
-    el.classList.add("active"); // visual temporal mientras se mantiene
-  });
+    el.classList.add("active");
+  }, {passive:true});
 
+  // keyup: remove active and add persistent pressed
   window.addEventListener("keyup", (e) => {
     const el = findKeyElementByEvent(e);
     if (!el) return;
     pressedPhysical.delete(e.code);
     el.classList.remove("active");
-    // persistir: marcar como pressed permanentemente
     if (!el.classList.contains("pressed")) el.classList.add("pressed");
-  });
+  }, {passive:true});
 
+  // blur: clear active states but keep pressed
   window.addEventListener("blur", () => {
     pressedPhysical.clear();
     document.querySelectorAll(".key.active").forEach(k => k.classList.remove("active"));
   });
 
-  // pointer interactions: marcar permanentemente al soltar
+  // pointer interactions: pointerdown shows active, pointerup toggles persistent pressed
   kb.addEventListener("pointerdown", (ev) => {
     const keyEl = ev.target.closest(".key");
     if (!keyEl) return;
+    keyEl.setPointerCapture(ev.pointerId);
     keyEl.classList.add("active");
   });
+
   kb.addEventListener("pointerup", (ev) => {
     const keyEl = ev.target.closest(".key");
     if (!keyEl) return;
+    try { keyEl.releasePointerCapture(ev.pointerId); } catch(e){}
     keyEl.classList.remove("active");
     if (!keyEl.classList.contains("pressed")) keyEl.classList.add("pressed");
   });
 
-  // utilidades
+  // contextmenu / cancel: ensure active cleared
+  kb.addEventListener("pointercancel", (ev) => {
+    const keyEl = ev.target.closest(".key");
+    if (!keyEl) return;
+    keyEl.classList.remove("active");
+  });
+
+  // Expose utilities for testing and control
   window.keyboardUtils = {
-    resetPressed: () => document.querySelectorAll(".key.pressed").forEach(k => k.classList.remove("pressed")),
-    getPressedKeys: () => [...document.querySelectorAll(".key.pressed")].map(k => k.dataset.keyLabel)
+    resetPressed: () => {
+      document.querySelectorAll(".key.pressed").forEach(k => k.classList.remove("pressed"));
+    },
+    getPressedKeys: () => {
+      return [...document.querySelectorAll(".key.pressed")].map(k => {
+        // return readable label if dataset is a code name
+        const ds = k.dataset.keyLabel;
+        const labelMap = {"ShiftLeft":"Shift","ShiftRight":"Shift","CtrlLeft":"Ctrl","CtrlRight":"Ctrl","AltLeft":"Alt","AltRight":"Alt","Space":"Space"};
+        return labelMap[ds] || k.textContent;
+      });
+    },
+    markKeyPressed: (labelOrDataset) => {
+      // allow marking by dataset keyLabel or visible label
+      let el = document.querySelector(`.key[data-key-label="${labelOrDataset}"]`);
+      if (!el) el = [...document.querySelectorAll(".key")].find(k => k.textContent === labelOrDataset);
+      if (el) el.classList.add("pressed");
+    }
   };
 
-  console.log("Keyboard ready. Use keyboardUtils.getPressedKeys() / resetPressed().");
+  console.log("Keyboard initialized. Use keyboardUtils.getPressedKeys() and keyboardUtils.resetPressed().");
 });

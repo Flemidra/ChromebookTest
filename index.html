@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -8,19 +8,19 @@
   <link rel="stylesheet" href="css/keyboard.css" />
 </head>
 <body>
-  <button id="theme-toggle" class="theme-toggle">Toggle Theme</button>
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌗</button>
 
   <div id="overlay" class="overlay" style="display:flex">
     <div class="overlay-card">
       <h2>Permissions Required</h2>
       <p>This page needs access to the camera and microphone.</p>
-      <button id="force-permissions">Allow camera & mic</button>
+      <button id="force-permissions">Allow camera &amp; mic</button>
     </div>
   </div>
 
   <div class="grid">
     <section class="card audio-card">
-      <h2>Audio Test</h2>
+      <h2 class="card-title">Audio Test</h2>
       <video id="audio-video" preload="auto" controls playsinline></video>
       <div class="controls">
         <button id="audio-play">Play</button>
@@ -29,30 +29,31 @@
     </section>
 
     <section class="card mic-card">
-      <h2>Microphone</h2>
+      <h2 class="card-title">Microphone</h2>
       <canvas id="mic-canvas" width="600" height="160"></canvas>
     </section>
 
     <section class="card cam-card">
-      <h2>Camera</h2>
+      <h2 class="card-title">Camera</h2>
       <video id="cam-video" autoplay playsinline muted></video>
     </section>
 
     <section class="card keyboard-card">
-      <h2>Keyboard Test</h2>
-      <div id="keyboard"></div>
-      <div style="margin-top:10px;display:flex;gap:8px;">
-        <button id="keyboard-reset">Reset pressed</button>
-        <button id="keyboard-list">List pressed</button>
-      </div>
+      <h2 class="card-title card-title-left">Keyboard Test</h2>
+      <div id="keyboard" class="keyboard-container" aria-hidden="false"></div>
     </section>
 
     <section class="card battery-card">
-      <h2>Battery Test</h2>
-      <div id="battery-info">
-        <div>Estado: <span id="battery-status">—</span></div>
-        <div>Porcentaje: <span id="battery-level">—</span></div>
-        <div>Tiempo estimado: <span id="battery-time">—</span></div>
+      <h2 class="card-title">Battery Test</h2>
+      <div id="battery-info" class="battery-info">
+        <div class="battery-row">
+          <div class="battery-icon" id="battery-icon" aria-hidden="true"></div>
+          <div>
+            <div>State: <span id="battery-status">—</span></div>
+            <div>Level: <span id="battery-level">—</span></div>
+            <div>Estimated time: <span id="battery-time">—</span></div>
+          </div>
+        </div>
       </div>
       <div class="battery-controls" style="margin-top:8px;">
         <button id="battery-refresh">Refresh</button>
@@ -62,7 +63,7 @@
 
   <div class="watermark">Created by Flemidra</div>
 
-  <!-- JS: cargar safeplay antes de audio.js -->
+  <!-- JS -->
   <script defer src="js/theme.js"></script>
   <script defer src="js/permissions.js"></script>
   <script defer src="js/safeplay.js"></script>
@@ -74,15 +75,14 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // audio controls
       const playBtn = document.getElementById('audio-play');
       const stopBtn = document.getElementById('audio-stop');
       const audioVideo = document.getElementById('audio-video');
-
       if (audioVideo) {
         if (audioVideo.safeSetSrc) audioVideo.safeSetSrc('assets/media/test.mp4');
         else audioVideo.src = 'assets/media/test.mp4';
       }
-
       if (playBtn) playBtn.onclick = () => {
         if (window.safePlayVideo) window.safePlayVideo();
         else audioVideo.play().catch(()=>{});
@@ -91,15 +91,18 @@
         if (audioVideo) { audioVideo.pause(); audioVideo.currentTime = 0; }
       };
 
-      const resetBtn = document.getElementById('keyboard-reset');
-      const listBtn = document.getElementById('keyboard-list');
-      if (resetBtn) resetBtn.onclick = () => { if (window.keyboardUtils) window.keyboardUtils.resetPressed(); };
-      if (listBtn) listBtn.onclick = () => { if (window.keyboardUtils) console.log(window.keyboardUtils.getPressedKeys()); };
-
+      // keyboard helpers removed from UI (utilities remain available in console)
+      // battery refresh
       const batteryRefresh = document.getElementById('battery-refresh');
       if (batteryRefresh) batteryRefresh.onclick = () => {
         if (window.initBattery) window.initBattery();
-      }
+      };
+
+      // theme toggle
+      const themeToggle = document.getElementById('theme-toggle');
+      if (themeToggle) themeToggle.onclick = () => {
+        if (window.toggleTheme) window.toggleTheme();
+      };
     });
   </script>
 </body>
