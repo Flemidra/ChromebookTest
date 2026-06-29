@@ -10,7 +10,7 @@
 <body>
   <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌗</button>
 
-  <div id="overlay" class="overlay" style="display:flex">
+  <div id="overlay" class="overlay">
     <div class="overlay-card">
       <h2>Permissions Required</h2>
       <p>This page needs access to the camera and microphone.</p>
@@ -20,7 +20,7 @@
 
   <div class="grid">
     <section class="card audio-card">
-      <h2 class="card-title">Audio Test</h2>
+      <h2 class="card-title">Video Test</h2>
       <video id="audio-video" preload="auto" controls playsinline></video>
       <div class="controls">
         <button id="audio-play">Play</button>
@@ -31,16 +31,6 @@
     <section class="card mic-card">
       <h2 class="card-title">Microphone</h2>
       <canvas id="mic-canvas" width="600" height="160"></canvas>
-    </section>
-
-    <section class="card cam-card">
-      <h2 class="card-title">Camera</h2>
-      <video id="cam-video" autoplay playsinline muted></video>
-    </section>
-
-    <section class="card keyboard-card">
-      <h2 class="card-title card-title-left">Keyboard Test</h2>
-      <div id="keyboard" class="keyboard-container" aria-hidden="false"></div>
     </section>
 
     <section class="card battery-card">
@@ -59,11 +49,20 @@
         <button id="battery-refresh">Refresh</button>
       </div>
     </section>
+
+    <section class="card cam-card">
+      <h2 class="card-title">Camera</h2>
+      <video id="cam-video" autoplay playsinline muted></video>
+    </section>
+
+    <section class="card keyboard-card">
+      <h2 class="card-title card-title-left">Keyboard Test</h2>
+      <div id="keyboard" class="keyboard-container" aria-hidden="false"></div>
+    </section>
   </div>
 
   <div class="watermark">Created by Flemidra</div>
 
-  <!-- JS -->
   <script defer src="js/theme.js"></script>
   <script defer src="js/permissions.js"></script>
   <script defer src="js/safeplay.js"></script>
@@ -75,33 +74,29 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // audio controls
-      const playBtn = document.getElementById('audio-play');
-      const stopBtn = document.getElementById('audio-stop');
       const audioVideo = document.getElementById('audio-video');
       if (audioVideo) {
         if (audioVideo.safeSetSrc) audioVideo.safeSetSrc('assets/media/test.mp4');
         else audioVideo.src = 'assets/media/test.mp4';
       }
-      if (playBtn) playBtn.onclick = () => {
-        if (window.safePlayVideo) window.safePlayVideo();
-        else audioVideo.play().catch(()=>{});
-      };
-      if (stopBtn) stopBtn.onclick = () => {
-        if (audioVideo) { audioVideo.pause(); audioVideo.currentTime = 0; }
-      };
+      document.getElementById('audio-play').onclick = () => { if (window.safePlayVideo) window.safePlayVideo(); else audioVideo.play().catch(()=>{}); };
+      document.getElementById('audio-stop').onclick = () => { if (audioVideo) { audioVideo.pause(); audioVideo.currentTime = 0; } };
 
-      // keyboard helpers removed from UI (utilities remain available in console)
-      // battery refresh
-      const batteryRefresh = document.getElementById('battery-refresh');
-      if (batteryRefresh) batteryRefresh.onclick = () => {
-        if (window.initBattery) window.initBattery();
-      };
+      document.getElementById('battery-refresh').onclick = () => { if (window.initBattery) window.initBattery(); };
+      document.getElementById('theme-toggle').onclick = () => { if (window.toggleTheme) window.toggleTheme(); };
 
-      // theme toggle
-      const themeToggle = document.getElementById('theme-toggle');
-      if (themeToggle) themeToggle.onclick = () => {
-        if (window.toggleTheme) window.toggleTheme();
+      const forceBtn = document.getElementById('force-permissions');
+      if (forceBtn) forceBtn.onclick = async () => {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+          const cam = document.getElementById('cam-video');
+          if (cam) cam.srcObject = stream;
+          document.getElementById('overlay').style.display = 'none';
+          if (typeof startMic === 'function') startMic();
+          if (typeof startCam === 'function') startCam();
+        } catch (err) {
+          document.querySelector('#overlay .overlay-card p').textContent = 'Unable to get permissions. Check site settings.';
+        }
       };
     });
   </script>
